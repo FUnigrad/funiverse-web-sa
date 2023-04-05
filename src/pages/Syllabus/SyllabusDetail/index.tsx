@@ -13,7 +13,7 @@ import { AxiosResponse } from 'axios';
 import SyllabusFormPage from '../SyllabusForm';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { generateOptions } from 'src/utils';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from 'src/components/CircularProgress';
 
 function transfromSyllabusDetail(data: Syllabus) {
   return {

@@ -15,7 +15,7 @@ import { AxiosResponse } from 'axios';
 import { ModalContext } from 'src/contexts/ModalContext';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from 'src/components/CircularProgress';
 
 function transfromSyllabusDetail(data: Combo) {
   return {

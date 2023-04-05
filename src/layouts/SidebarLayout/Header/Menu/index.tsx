@@ -79,67 +79,67 @@ function HeaderMenu() {
   const handleClose = (): void => {
     setOpen(false);
   };
-  const { data: currentData } = useQuery({
-    queryKey: [QueryKey.Terms, 'current'],
-    queryFn: () => termApis.getTerm('current'),
-    retry: 0,
-  });
-  const { data: nextData } = useQuery({
-    queryKey: [QueryKey.Terms, 'next'],
-    queryFn: () => termApis.getTerm('next'),
-    cacheTime: 0,
-    retry: 0,
-  });
-  const mutation = useMutation({
-    mutationFn: termApis.startNewSemester,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'current'] });
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'next'] });
-      dispatch({ type: 'close' });
-    },
-  });
+  // const { data: currentData } = useQuery({
+  //   queryKey: [QueryKey.Terms, 'current'],
+  //   queryFn: () => termApis.getTerm('current'),
+  //   retry: 0,
+  // });
+  // const { data: nextData } = useQuery({
+  //   queryKey: [QueryKey.Terms, 'next'],
+  //   queryFn: () => termApis.getTerm('next'),
+  //   cacheTime: 0,
+  //   retry: 0,
+  // });
+  // const mutation = useMutation({
+  //   mutationFn: termApis.startNewSemester,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'current'] });
+  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'next'] });
+  //     dispatch({ type: 'close' });
+  //   },
+  // });
   //TODO: Urgent
   function handleStartNewSemester() {
-    dispatch({
-      type: 'open',
-      payload: {
-        content: () => (
-          <Typography variant="h6" color="initial">
-            Current semester is:{' '}
-            <b>
-              {currentData?.season} {currentData?.year}
-            </b>
-            . Do you want to start{' '}
-            <b>
-              {nextData?.season} {nextData?.year}
-            </b>
-            ?
-          </Typography>
-        ),
-        title: 'Start new semester',
-        saveTitle: 'Start',
-      },
-      onCreateOrSave: () => {
-        dispatch({ type: 'close' });
-        setTimeout(() => {
-          dispatch({
-            type: 'open',
-            payload: {
-              content: () => (
-                <Typography variant="h6" color="initial">
-                  Doing this action means that you will ... .//TODO: Warning message here
-                </Typography>
-              ),
-              title: 'Confirm start new semester',
-              saveTitle: 'Confirm',
-            },
-            onCreateOrSave: () => {
-              mutation.mutate();
-            },
-          });
-        }, 0);
-      },
-    });
+    // dispatch({
+    //   type: 'open',
+    //   payload: {
+    //     content: () => (
+    //       <Typography variant="h6" color="initial">
+    //         Current semester is:{' '}
+    //         <b>
+    //           {currentData?.season} {currentData?.year}
+    //         </b>
+    //         . Do you want to start{' '}
+    //         <b>
+    //           {nextData?.season} {nextData?.year}
+    //         </b>
+    //         ?
+    //       </Typography>
+    //     ),
+    //     title: 'Start new semester',
+    //     saveTitle: 'Start',
+    //   },
+    //   onCreateOrSave: () => {
+    //     dispatch({ type: 'close' });
+    //     setTimeout(() => {
+    //       dispatch({
+    //         type: 'open',
+    //         payload: {
+    //           content: () => (
+    //             <Typography variant="h6" color="initial">
+    //               Doing this action means that you will ... .//TODO: Warning message here
+    //             </Typography>
+    //           ),
+    //           title: 'Confirm start new semester',
+    //           saveTitle: 'Confirm',
+    //         },
+    //         onCreateOrSave: () => {
+    //           mutation.mutate();
+    //         },
+    //       });
+    //     }, 0);
+    //   },
+    // });
   }
   return (
     <>

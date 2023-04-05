@@ -43,10 +43,11 @@ function HeaderRowTable({ data }: HeaderRowTableProps) {
               return (
                 <TableRow key={label}>
                   <TableCell
-                    style={{
+                    sx={{
                       width: 'max-content',
                       whiteSpace: 'nowrap',
                       borderRight: '1px solid #ccc',
+                      fontWeight: 600,
                     }}
                     component="th"
                     scope="row"

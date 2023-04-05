@@ -15,7 +15,7 @@ import SubjectForm from './SubjectForm';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import Table from 'src/components/Table';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from 'src/components/CircularProgress';
 
 function transfromSubjectDetail(data: Subject) {
   return {

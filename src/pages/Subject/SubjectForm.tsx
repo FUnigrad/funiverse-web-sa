@@ -89,7 +89,6 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
     },
   });
 
-  // const watchCombo = watch('combo');
   // console.log('🚀 ~ watchCombo', watchCombo);
   useEffect(() => {
     clearErrors();

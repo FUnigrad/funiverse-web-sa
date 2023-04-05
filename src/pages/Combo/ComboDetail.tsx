@@ -18,7 +18,7 @@ import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import Table from 'src/components/Table';
 import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
 import { toast } from 'react-toastify';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from 'src/components/CircularProgress';
 
 function transfromComboDetail(data: Combo) {
   return {

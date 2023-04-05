@@ -18,7 +18,7 @@ import MajorForm from './MajorForm';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import SpecializationForm from './Specialization/SpecializationForm';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from 'src/components/CircularProgress';
 import { toast } from 'react-toastify';
 function transfromGroupDetail(data: Major) {
   return {

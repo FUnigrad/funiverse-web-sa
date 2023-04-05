@@ -7,11 +7,11 @@ import MuiLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType, Subject } from 'src/@types';
-import { QueryKey, groupApis, syllabusApis, subjectApis } from 'src/apis';
+import { Group, GroupType, Workspace } from 'src/@types';
+import { QueryKey, groupApis, syllabusApis, workspaceApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
@@ -19,30 +19,57 @@ import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-// import SubjectForm, { SubjectFormInputs } from './SubjectForm';
+// import WorkspaceForm, { WorkspaceFormInputs } from './WorkspaceForm';
 import { generateOptions } from 'src/utils';
 import { toast } from 'react-toastify';
-
+import WorkspaceForm from './WorkspaceForm';
+import Modal from '@mui/material/Modal';
+import CircularProgressLabel from 'src/components/CircularProgressLabel';
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 100,
+  height: 100,
+  bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  // pt: 2,
+  // px: 4,
+  // pb: 3,
+};
 function WorkspacePage() {
   const { dispatch } = useContext(ModalContext);
-
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Subjects],
-    queryFn: subjectApis.getSubjects,
+    queryKey: [QueryKey.Workspaces],
+    queryFn: workspaceApis.getWorkspaces,
     refetchOnWindowFocus: false,
   });
 
   const mutation = useMutation({
-    mutationFn: (id) => subjectApis.deleteSubject(id),
+    mutationFn: (id) => workspaceApis.deleteWorkspace(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Subjects] });
-      toast.success(`Deactivate Subject successfully!`);
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Workspaces] });
+      toast.success(`Deactivate Workspace successfully!`);
       dispatch({ type: 'close' });
     },
   });
-  const columns = useMemo<MRT_ColumnDef<Subject>[]>(
+
+  const createMutation = useMutation<Workspace, unknown, any, unknown>({
+    mutationFn: (body) => workspaceApis.createWorkspace(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Workspaces] });
+      toast.success(`Create Workspace successfully!`);
+      dispatch({ type: 'close' });
+    },
+  });
+  const columns = useMemo<MRT_ColumnDef<Workspace>[]>(
     () => [
       {
         header: 'Code',
@@ -59,62 +86,55 @@ function WorkspacePage() {
         ),
         enableHiding: false,
       },
-
-      // {
-      //   header: 'Combo',
-      //   accessorKey: 'combo',
-      //   enableSorting: false,
-      //   Cell: ({ cell }) => (
-      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-      //   ),
-      // },
-      // {
-      //   header: 'Active',
-      //   accessorKey: 'active',
-      //   enableSorting: false,
-      //   Cell: ({ cell }) => (
-      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-      //   ),
-      // },
+      {
+        header: 'Domain',
+        accessorKey: 'domain',
+        size: 50,
+      },
     ],
     [],
   );
+
+  function handleCreateWorkspaceSubmit(data: any) {
+    // dispatch({ type: 'close' });
+    // handleOpen();
+    createMutation.mutate(data);
+  }
 
   function onCreateEntity() {
     dispatch({
       type: 'open',
       payload: {
         title: 'Create Workspace',
-        // content: () => <SubjectForm />,
-        content: () => <div />,
+        content: () => <WorkspaceForm onSubmit={handleCreateWorkspaceSubmit} />,
       },
       onCreateOrSave: () => {},
     });
   }
 
-  function onEditEntity(row: MRT_Row<Subject>) {
-    const { original } = row;
-    const defaultValues = {
-      id: original.id,
-      name: original.name,
-      code: original.code,
-      combo: original.combo,
-      subjects: original.subjects
-        ? generateOptions({ data: original.subjects, valuePath: 'id', labelPath: 'code' })
-        : null,
-      // active: original.active,
-    };
-    dispatch({
-      type: 'open',
-      payload: {
-        title: 'Edit Subject',
-        // content: () => <SubjectForm defaultValues={{ ...(defaultValues as any) }} />,
-        content: () => <div />,
-      },
-      onCreateOrSave: () => {},
-    });
+  function onEditEntity(row: MRT_Row<Workspace>) {
+    // const { original } = row;
+    // const defaultValues = {
+    //   id: original.id,
+    //   name: original.name,
+    //   code: original.code,
+    //   combo: original.combo,
+    //   workspaces: original.workspaces
+    //     ? generateOptions({ data: original.workspaces, valuePath: 'id', labelPath: 'code' })
+    //     : null,
+    //   // active: original.active,
+    // };
+    // dispatch({
+    //   type: 'open',
+    //   payload: {
+    //     title: 'Edit Workspace',
+    //     // content: () => <WorkspaceForm defaultValues={{ ...(defaultValues as any) }} />,
+    //     content: () => <div />,
+    //   },
+    //   onCreateOrSave: () => {},
+    // });
   }
-  function onDeleteEntity(row: MRT_Row<Subject>) {
+  function onDeleteEntity(row: MRT_Row<Workspace>) {
     if (!row) return;
 
     dispatch({
@@ -146,8 +166,13 @@ function WorkspacePage() {
           showAlertBanner: isError,
           showProgressBars: isFetching,
         }}
-        getRowId={(originalRow: MRT_Row<Subject>) => originalRow.id}
+        getRowId={(originalRow: MRT_Row<Workspace>) => originalRow.id}
       />
+      <Modal open={open} onClose={handleClose} keepMounted>
+        <Box sx={style}>
+          <CircularProgressLabel value={10} />
+        </Box>
+      </Modal>
     </Box>
   );
 }

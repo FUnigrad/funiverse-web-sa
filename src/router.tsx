@@ -67,6 +67,7 @@ const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const SubjectDetailPage = Loader(lazy(() => import('src/pages/Subject/SubjectDetail')));
 const ComboPage = Loader(lazy(() => import('src/pages/Combo')));
 const WorkspacePage = Loader(lazy(() => import('src/pages/Workspace')));
+const WorkspaceDetailPage = Loader(lazy(() => import('src/pages/Workspace/WorkspaceDetail')));
 const ComboDetailPage = Loader(lazy(() => import('src/pages/Combo/ComboDetail')));
 const MajorPage = Loader(lazy(() => import('src/pages/Major')));
 const MajorDetailPage = Loader(lazy(() => import('src/pages/Major/MajorDetail')));
@@ -245,10 +246,10 @@ const routes: RouteObject[] = [
         path: '',
         element: <WorkspacePage />,
       },
-      // {
-      //   path: ':slug',
-      //   element: <ComboDetailPage />,
-      // },
+      {
+        path: ':slug',
+        element: <WorkspaceDetailPage />,
+      },
     ],
   },
   // {
