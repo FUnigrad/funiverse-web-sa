@@ -25,25 +25,37 @@ import { toast } from 'react-toastify';
 import WorkspaceForm from './WorkspaceForm';
 import Modal from '@mui/material/Modal';
 import CircularProgressLabel from 'src/components/CircularProgressLabel';
+import Button from '@mui/material/Button';
+import DoneIcon from '@mui/icons-material/Done';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 100,
-  height: 100,
-  bgcolor: 'background.paper',
+  // width: 100,
+  // height: 100,
+  bgcolor: '#fff',
   // border: '2px solid #000',
   boxShadow: 24,
+  borderRadius: '50%',
+  display: 'flex',
+  flexFlow: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
   // pt: 2,
   // px: 4,
   // pb: 3,
 };
 function WorkspacePage() {
-  const { dispatch } = useContext(ModalContext);
+  const [progress, setProgress] = useState(0);
   const [open, setOpen] = useState(false);
+  const { dispatch } = useContext(ModalContext);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    // setOpen(false)
+  };
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, isFetching } = useQuery({
@@ -56,7 +68,7 @@ function WorkspacePage() {
     mutationFn: (id) => workspaceApis.deleteWorkspace(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Workspaces] });
-      toast.success(`Deactivate Workspace successfully!`);
+      toast.success(`Delete Workspace successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -69,6 +81,24 @@ function WorkspacePage() {
       dispatch({ type: 'close' });
     },
   });
+
+  useEffect(() => {
+    if (!open || !createMutation.isLoading) {
+      setProgress(0);
+      return;
+    }
+    const timer = setInterval(
+      () => {
+        setProgress((prevProgress) => (prevProgress < 100 ? prevProgress + 1 : 100));
+      },
+      createMutation.isSuccess ? 100 : 0,
+    );
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [createMutation.isSuccess, open, createMutation.isLoading]);
+
   const columns = useMemo<MRT_ColumnDef<Workspace>[]>(
     () => [
       {
@@ -97,7 +127,7 @@ function WorkspacePage() {
 
   function handleCreateWorkspaceSubmit(data: any) {
     // dispatch({ type: 'close' });
-    // handleOpen();
+    handleOpen();
     createMutation.mutate(data);
   }
 
@@ -107,33 +137,12 @@ function WorkspacePage() {
       payload: {
         title: 'Create Workspace',
         content: () => <WorkspaceForm onSubmit={handleCreateWorkspaceSubmit} />,
+        saveTitle: 'Create',
       },
       onCreateOrSave: () => {},
     });
   }
 
-  function onEditEntity(row: MRT_Row<Workspace>) {
-    // const { original } = row;
-    // const defaultValues = {
-    //   id: original.id,
-    //   name: original.name,
-    //   code: original.code,
-    //   combo: original.combo,
-    //   workspaces: original.workspaces
-    //     ? generateOptions({ data: original.workspaces, valuePath: 'id', labelPath: 'code' })
-    //     : null,
-    //   // active: original.active,
-    // };
-    // dispatch({
-    //   type: 'open',
-    //   payload: {
-    //     title: 'Edit Workspace',
-    //     // content: () => <WorkspaceForm defaultValues={{ ...(defaultValues as any) }} />,
-    //     content: () => <div />,
-    //   },
-    //   onCreateOrSave: () => {},
-    // });
-  }
   function onDeleteEntity(row: MRT_Row<Workspace>) {
     if (!row) return;
 
@@ -146,7 +155,7 @@ function WorkspacePage() {
         // title: 'Delete this item',
         content: () => (
           <Typography variant="body1">
-            Are you sure you want to deactivate {row.original.name}?
+            Are you sure you want to delete {row.original.name}?
           </Typography>
         ),
       },
@@ -168,9 +177,34 @@ function WorkspacePage() {
         }}
         getRowId={(originalRow: MRT_Row<Workspace>) => originalRow.id}
       />
-      <Modal open={open} onClose={handleClose} keepMounted>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        sx={{ zIndex: 1400, '& .MuiBackdrop-root': { background: '#fff', opacity: 0.5 } }}
+      >
         <Box sx={style}>
-          <CircularProgressLabel value={10} />
+          <CircularProgressLabel value={progress} />
+          {createMutation.isSuccess ? (
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ mt: 5 }}
+              startIcon={<DoneIcon />}
+              onClick={() => setOpen(false)}
+            >
+              Success
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<ErrorOutlineIcon />}
+              onClick={() => setOpen(false)}
+              sx={{ mt: 5, width: 'fit-content' }}
+            >
+              Try again
+            </Button>
+          )}
         </Box>
       </Modal>
     </Box>
