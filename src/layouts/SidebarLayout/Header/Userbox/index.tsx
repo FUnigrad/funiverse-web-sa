@@ -22,6 +22,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { __DEV__, appCookies } from 'src/utils';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -61,7 +62,7 @@ const UserBoxDescription = styled(Typography)(
 function HeaderUserbox() {
   const user = {
     name: 'System Admin',
-    avatar: '/static/images/avatars/1.jpg',
+    avatar: '/static/images/avatars/admin.jfif',
     jobtitle: 'Administration',
   };
 
@@ -127,7 +128,16 @@ function HeaderUserbox() {
         </List> */}
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Button
+            color="primary"
+            fullWidth
+            onClick={() => {
+              appCookies.clearAll();
+              window.location.href = __DEV__
+                ? 'http://localhost:8000/verify'
+                : process.env.REACT_APP_REDIRECT_URL;
+            }}
+          >
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>

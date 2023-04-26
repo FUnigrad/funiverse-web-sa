@@ -78,26 +78,28 @@ function WorkspacePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Workspaces] });
       toast.success(`Create Workspace successfully!`);
-      dispatch({ type: 'close' });
+      // dispatch({ type: 'close' });
     },
   });
 
-  useEffect(() => {
-    if (!open || !createMutation.isLoading) {
-      setProgress(0);
-      return;
-    }
-    const timer = setInterval(
-      () => {
-        setProgress((prevProgress) => (prevProgress < 100 ? prevProgress + 1 : 100));
-      },
-      createMutation.isSuccess ? 100 : 0,
-    );
+  const isFulfilledSuccess = !createMutation.isLoading && createMutation.isSuccess;
+  const isFulfilledFail = !createMutation.isLoading && createMutation.isError;
+  // useEffect(() => {
+  //   if (!open || isFulfilledFail) {
+  //     setProgress(0);
+  //     return;
+  //   }
+  //   const timer = setInterval(
+  //     () => {
+  //       setProgress((prevProgress) => (prevProgress < 100 ? prevProgress + 1 : 100));
+  //     },
+  //     isFulfilledSuccess ? 0 : 1000,
+  //   );
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [createMutation.isSuccess, open, createMutation.isLoading]);
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, [open, isFulfilledFail, isFulfilledSuccess]);
 
   const columns = useMemo<MRT_ColumnDef<Workspace>[]>(
     () => [
@@ -126,8 +128,8 @@ function WorkspacePage() {
   );
 
   function handleCreateWorkspaceSubmit(data: any) {
-    // dispatch({ type: 'close' });
-    handleOpen();
+    dispatch({ type: 'close' });
+    // handleOpen();
     createMutation.mutate(data);
   }
 
@@ -177,14 +179,14 @@ function WorkspacePage() {
         }}
         getRowId={(originalRow: MRT_Row<Workspace>) => originalRow.id}
       />
-      <Modal
+      {/* <Modal
         open={open}
         onClose={handleClose}
         sx={{ zIndex: 1400, '& .MuiBackdrop-root': { background: '#fff', opacity: 0.5 } }}
       >
         <Box sx={style}>
           <CircularProgressLabel value={progress} />
-          {createMutation.isSuccess ? (
+          {isFulfilledSuccess ? (
             <Button
               variant="contained"
               color="success"
@@ -194,7 +196,7 @@ function WorkspacePage() {
             >
               Success
             </Button>
-          ) : (
+          ) : isFulfilledFail ? (
             <Button
               variant="contained"
               color="error"
@@ -204,9 +206,9 @@ function WorkspacePage() {
             >
               Try again
             </Button>
-          )}
+          ) : null}
         </Box>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 }

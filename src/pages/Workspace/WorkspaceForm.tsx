@@ -25,7 +25,7 @@ const WorkspaceSchema = z.object({
   code: z.string().min(1),
   domain: z.string().min(1),
   personalMail: z.string().email(),
-  eduMail: z.string().email(),
+  // eduMail: z.string().email(),
 });
 
 export type WorkspaceFormInputs = z.infer<typeof WorkspaceSchema>;
@@ -121,19 +121,19 @@ function WorkspaceForm({ defaultValues, onSubmit }: WorkspaceFormProps) {
           {...register('domain')}
         />
         <TextField
-          label="Personal mail"
+          label="Email"
           required
           error={Boolean(errors.personalMail)}
           helperText={errors.personalMail?.message}
           {...register('personalMail')}
         />
-        <TextField
+        {/* <TextField
           label="Edu mail"
           required
           error={Boolean(errors.eduMail)}
           helperText={errors.eduMail?.message}
           {...register('eduMail')}
-        />
+        /> */}
       </Box>
     </>
   );

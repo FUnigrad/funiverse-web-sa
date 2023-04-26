@@ -21,7 +21,7 @@ function transfromWorkspaceDetail(data: Workspace) {
     code: { label: 'Code', value: data.code },
     domain: { label: 'Domain', value: data.domain },
     adminPersonalMail: { label: 'Admin personal mail', value: data.admin.personalMail },
-    admin: { label: 'Admin edu mail', value: data.admin.personalMail },
+    admin: { label: 'Admin edu mail', value: data.admin.eduMail },
   };
 }
 

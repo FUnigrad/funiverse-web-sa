@@ -14,6 +14,7 @@ const axiosClient = axios.create({
   baseURL: process.env.REACT_APP_BASE_API,
   paramsSerializer: { serialize: (params) => qs.stringify(params) },
   // baseURL: 'http://dev.funiverse.world/api',
+  timeout: 0,
   proxy: {
     host: 'http://localhost',
     port: 3001,

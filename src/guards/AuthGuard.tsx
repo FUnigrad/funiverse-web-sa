@@ -10,7 +10,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   if (!refreshToken) {
     window.location.href = __DEV__
       ? 'http://localhost:8000/verify'
-      : process.env.REACT_APP_LANDING_URL + 'verify';
+      : process.env.REACT_APP_REDIRECT_URL + 'verify';
     return null;
   }
   if (accessToken) {
@@ -19,7 +19,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       appCookies.clearAll();
       window.location.href = __DEV__
         ? 'http://localhost:8000/verify'
-        : process.env.REACT_APP_LANDING_URL + 'verify';
+        : process.env.REACT_APP_REDIRECT_URL + 'verify';
       return null;
     }
   }
