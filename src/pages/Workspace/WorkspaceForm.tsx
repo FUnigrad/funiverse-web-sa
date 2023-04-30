@@ -92,7 +92,7 @@ function WorkspaceForm({ defaultValues, onSubmit }: WorkspaceFormProps) {
         noValidate
         sx={{
           '& .MuiTextField-root': { m: 1, width: '100%' },
-          height: 440,
+          height: 350,
         }}
       >
         <TextField
