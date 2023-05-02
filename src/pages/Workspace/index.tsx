@@ -61,7 +61,7 @@ function WorkspacePage() {
   const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: [QueryKey.Workspaces],
     queryFn: workspaceApis.getWorkspaces,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   const mutation = useMutation({
