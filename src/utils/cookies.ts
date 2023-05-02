@@ -1,4 +1,5 @@
 import { Cookies } from 'react-cookie';
+import { __DEV__ } from '.';
 export const CookieNames = {
   AccessToken: 'accessToken',
   RefreshToken: 'refreshToken',
@@ -25,8 +26,9 @@ export const appCookies = (function () {
       }
     },
     clearAll: () => {
-      cookies.remove(CookieNames.AccessToken);
-      cookies.remove(CookieNames.RefreshToken);
+      const defaultOption = { domain: __DEV__ ? 'localhost' : process.env.REACT_APP_PUBLIC_DOMAIN };
+      cookies.remove(CookieNames.AccessToken, defaultOption);
+      cookies.remove(CookieNames.RefreshToken, defaultOption);
     },
   };
 })();
